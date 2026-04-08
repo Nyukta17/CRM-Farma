@@ -1,3 +1,4 @@
+
 interface Table{
     id:string;
     name:string;
@@ -6,7 +7,7 @@ interface Table{
     farmaGroup:string
 }
 
-function medSclad(){
+function MedSclad(){
     const testData:Table[]=[
         {
         id:"0",
@@ -44,22 +45,45 @@ function medSclad(){
         farmaGroup:"Ноотропы"
         },
 ];
-
+    const columns=[
+        {key:'id',lable:'№'},
+        {key:'name',lable:'Название'},
+        {key:'price',lable:'Цена (руб.)'},
+        {key:'stock',lable:'Остаток'},
+        {key:'farmaGroup',lable:'Группа'},
+    ]
+     const handleSort = (key: string) => {
+        console.log("Ты нажал на колонку:", key);
+        // Здесь в будущем будет логика сортировки массива
+    };
     return(<>
-        <table>
+    
+        <table className="w-full text-left">
             <thead>
                 <tr>
-                    <th>1</th>
+                    {columns.map((col)=>(
+                    <th onClick={()=>handleSort(col.key)} 
+                    className={"cursor-pointer hover:bg-gray-100"} key={col.key} >
+                        {col.lable}
+                    </th>
+                ))}
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
+               {testData.map((row)=>(
+                <tr key={row.id}>
+                    {columns.map((col)=>(
+                        <td key={col.key}>
+                            {row[col.key as keyof Table]}
+                        </td>
+                    ))}
                 </tr>
+               )
+               )}
             </tbody>
         </table>
     </>
     )
 }
 
-export default medSclad();
+export default MedSclad;
