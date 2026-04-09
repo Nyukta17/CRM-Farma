@@ -1,12 +1,26 @@
+import { BrowserRouter, Route , Routes} from "react-router-dom";
+import MainLayout from "./components/MainLayout";
+import MedSclad from "./components/Pages/MedSclad";
+import Settings from "./components/Pages/Settings";
+import Delivery from "./components/Pages/Delivery";
+import Analis from "./components/Pages/Analis";
 
-import MedSclad from './components/medSclad'; 
 
-function App() { 
-  return ( 
+function App() {
+  return (
     <>
-      <MedSclad /> 
-    </> 
-  ); 
-} 
+      <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<MainLayout />}>
+            <Route path="medicine" element={<MedSclad />} />
+            <Route path="settings" element={<Settings/>} />
+            <Route path="delivery" element={<Delivery/>}/>
+            <Route path="analis" element={<Analis/>}/>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
+}
 
 export default App;
