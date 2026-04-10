@@ -49,6 +49,8 @@ function MedSclad(){
     const[keySort,setKey]=useState('id');
     const[sortOrder,setSortOrder]=useState('asc');
     const[date,setDate] = useState(testData);
+    const[searchQuery,setSortQuery]=useState('');
+
     const columns:{key: keyof Table; lable:string}[]=[
         {key:'id',lable:'№'},
         {key:'name',lable:'Название'},
@@ -110,8 +112,6 @@ function MedSclad(){
 }
 
 const Search =()=>{
-    const[searchQuery,setSearchQuery]=useState('');
-
     return(<>
     <div className="max-w-md w-full">
   <label htmlFor="search" className="sr-only">Поиск препаратов</label>
@@ -124,8 +124,6 @@ const Search =()=>{
     <input
       type="text"
       id="search"
-      value={searchQuery}
-      onChange={(e)=>{setSearchQuery(e.target.value)}}
       className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg 
                  leading-5 bg-white placeholder-gray-500 
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
