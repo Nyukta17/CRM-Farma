@@ -1,3 +1,5 @@
+import type React from "react";
+
 interface IOrder {
     id: number,
     date: string,
@@ -53,7 +55,19 @@ const testDate: IOrder[] = [
             name: 'Нимисулид',
             quantity: 4,
             priceAtOrder: 1200
-        }
+        },
+        {
+            medicineId: 1,
+            name: 'Анальгин',
+            quantity: 4,
+            priceAtOrder: 1200
+        },
+        {
+            medicineId: 1,
+            name: 'Ибупрофен',
+            quantity: 4,
+            priceAtOrder: 1200
+        },
         ]
 
     }
@@ -79,7 +93,7 @@ const Orders = () => {
         <table>
             <thead>
                 <tr>
-                    { columns.map((col)=>
+                    {columns.map((col) =>
                         <th>
                             {col.lable}
                         </th>
@@ -87,17 +101,20 @@ const Orders = () => {
                 </tr>
             </thead>
             <tbody>
-                 {testDate.map((row)=>
-                <tr key={row.id}>
-                   
-                       {columns.map((col)=>
-                    <td key={col.key}>
-                    </td>
-                    )}
-                    
-    
-                </tr>
-                 )}
+                {testDate.map((row) =>
+                    <tr key={row.id} className="border-b hover:bg-gray-50">
+                        {columns.map((col=>
+                            <td key={col.key} className="p-3">
+                                {col.key==='status'?(<span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusStyles[row.status]}`}>{row.status}</span>):
+                                col.key=='order'?(<div className="text-xs italic text-gray-600">{row.order.map(item=>(<div>
+                                    {item.name} ({item.quantity} шт.)
+                                </div>))}</div>):
+                                col.key==="payment"?(<span className="font-semibold">{row.payment.toLocaleString()} ₽</span>):
+                                (row[col.key as keyof IOrder] as React.ReactNode)}
+                            </td>
+                        ))}
+                    </tr>
+                )}
             </tbody>
         </table>
     </>)
