@@ -100,7 +100,7 @@ function MedSclad() {
                                 {displayData.map((row) => (
                                     <tr key={row.id} className="hover:bg-blue-50/30 transition-colors group">
                                         {columns.map((col) => {
-                                            const value = Number(row[col.key as keyof Table]);
+                                            const value = row[col.key as keyof Table];
                                             
                                             // Стили для ячейки остатка (stock)
                                             let stockStyle = "";

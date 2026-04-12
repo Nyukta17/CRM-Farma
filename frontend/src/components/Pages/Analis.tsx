@@ -23,7 +23,6 @@ const topProducts = [
     { name: 'Арбидол', sales: 850, status: 'ok' },
     { name: 'Ибупрофен', sales: 600, status: 'low' }, // Дефицит
 ];
-import React from 'react';
 // Импортируем компоненты графиков (нужно установить: npm install recharts)
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 

@@ -5,6 +5,7 @@ const MainLayout=()=>{
         <div className="flex h-screen">
             <aside className="w-16 bg-slate-800 text-white flex flex-col items-center py-4">
                 <nav className="flex flex-col space-y-4">
+                    <Link to="/home" title="home">Home</Link>
                     <Link to="/medicine" title="Склад">📦</Link>
                     <Link to="/settings" title="настройки">⚙️</Link>
                     <Link to="/delivery" title="Заказы">🚛</Link>
