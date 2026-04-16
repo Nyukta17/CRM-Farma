@@ -1,4 +1,4 @@
-import "dotenv/config"; 
+import "dotenv/config";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
@@ -7,28 +7,31 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
+
 async function main() {
-  // upsert предотвратит ошибки при повторном запуске
-  await prisma.role.upsert({
-    where: { role: 'admin' },
+  const adminRole = await prisma.role.upsert({
+    where: { role: 'ADMIN' },
     update: {},
-    create: { role: 'admin' },
+    create: { role: 'ADMIN' },
   });
 
-  await prisma.role.upsert({
-    where: { role: 'client' },
+  const clientRole = await prisma.role.upsert({
+    where: { role: 'CLIENT' },
     update: {},
-    create: { role: 'client' },
+    create: { role: 'CLIENT' },
   });
 
-  console.log('✅ Роли успешно проинициализированы');
+  console.log({ adminRole, clientRole });
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+    await pool.end();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    await pool.end();
+    process.exit(1);
   });

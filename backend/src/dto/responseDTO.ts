@@ -1,6 +1,7 @@
 interface responseDTO{
     id:number;
-    roleId:number;
+    roleId?:number;
+    role?:string;
     firstName:string;
     lastName:string;
     email:string;
