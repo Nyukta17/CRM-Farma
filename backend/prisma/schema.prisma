@@ -30,6 +30,7 @@ model Product {
   count Int
   group String
   history StockAction[]
+  supplyItems SupplyItem[]
 }
 
 model StockAction {
@@ -46,3 +47,25 @@ enum ActionType{
   INCOMING
   OUTGOING
 }
+
+model SupplyOrder {
+  id          Int      @id @default(autoincrement())
+  supplier    String  
+  totalAmount Int      
+  status      String   @default("PENDING") 
+  createdAt   DateTime @default(now())
+  
+  items       SupplyItem[]
+}
+
+model SupplyItem {
+  id            Int         @id @default(autoincrement())
+  quantity      Int         
+  priceAtOrder  Int         
+  product       Product     @relation(fields: [productId], references: [id])
+  productId     Int
+  
+  order         SupplyOrder @relation(fields: [orderId], references: [id])
+  orderId       Int
+}
+
