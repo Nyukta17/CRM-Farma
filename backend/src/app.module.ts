@@ -6,6 +6,7 @@ import { RegModule } from './reg/reg.module';
 import { EncryptModule } from './encrypt/encrypt.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { AuthModule } from './auth/auth.module';
     PrismaModule,
     RegModule,
     AuthModule,
-    EncryptModule],
+    EncryptModule,
+    StockModule],
   controllers: [AppController],
   providers: [AppService],
 })

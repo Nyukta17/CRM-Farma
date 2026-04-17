@@ -22,3 +22,27 @@ model Role {
   role  String @unique
   users User[]
 }
+
+model Product {
+  id Int       @id @default(autoincrement())
+  name String
+  price Int
+  count Int
+  group String
+  history StockAction[]
+}
+
+model StockAction {
+  id Int      @id @default(autoincrement())
+  type ActionType
+  amount Int
+  createdAt DateTime @default(now())
+
+  Product Product @relation(fields: [productId],references:[id])
+  productId Int
+}
+
+enum ActionType{
+  INCOMING
+  OUTGOING
+}
