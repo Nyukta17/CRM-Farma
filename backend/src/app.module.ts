@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { StockModule } from './stock/stock.module';
 import { SupplyOrderModule } from './supply-order/supply-order.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { SupplyOrderModule } from './supply-order/supply-order.module';
     EncryptModule,
     StockModule,
     SupplyOrderModule,
-    SupplyOrderModule],
+    SupplyOrderModule,
+    OrdersModule],
   controllers: [AppController],
   providers: [AppService],
 })

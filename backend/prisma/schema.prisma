@@ -31,6 +31,7 @@ model Product {
   group String
   history StockAction[]
   supplyItems SupplyItem[]
+  order OrderItem[]
 }
 
 model StockAction {
@@ -69,3 +70,22 @@ model SupplyItem {
   orderId       Int
 }
 
+model Order{
+  id            Int      @id @default(autoincrement())
+  clientName    String
+  totalPrice    Int
+  createdAt     DateTime @default(now())
+  items         OrderItem[]
+}
+
+model OrderItem{
+  id            Int       @id @default(autoincrement())
+  quantity      Int
+  price         Int
+
+  product       Product   @relation(fields:[productId], references:[id])
+  productId     Int
+
+  order         Order     @relation(fields:[orderId], references:[id])
+  orderId       Int
+}
