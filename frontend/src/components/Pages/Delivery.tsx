@@ -1,52 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Orders from "./Orders";
 import SupplyOrder from "./SupplyOrder";
+import { StockService, type IProduct } from "../../API/stock.service"; 
 
 const Delivery = () => {
-    // 1. Состояние для активной вкладки
     const [activeTab, setActiveTab] = useState<'clients' | 'suppliers'>('clients');
+    const [products, setProducts] = useState<IProduct[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    const userRole = 'admin';
 
-    // 2. Имитация роли пользователя (в будущем придет из контекста/сервера)
-    const userRole = 'admin'; // попробуйте поменять на 'user', чтобы увидеть скрытие
+    const loadStock = async () => {
+        try {
+            setIsLoading(true);
+            const data = await StockService.getAll();
+            setProducts(data);
+        } catch (e) {
+            console.error("Ошибка загрузки склада:", e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadStock();
+    }, []);
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Управление заказами</h1>
+        <div className="p-6 bg-white min-h-screen">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-slate-800">Управление заказами</h1>
+                <button 
+                    onClick={loadStock}
+                    className="text-sm text-blue-600 hover:underline"
+                >
+                    {isLoading ? "Обновление..." : "🔄 Обновить остатки"}
+                </button>
+            </div>
 
             {/* Контейнер для кнопок-переключателей */}
-            <div className="flex gap-2 mb-6 border-b border-gray-200">
+            <div className="flex gap-4 mb-8 border-b border-gray-200">
                 <button
                     onClick={() => setActiveTab('clients')}
-                    className={`px-4 py-2 transition-all ${
+                    className={`pb-2 px-1 transition-all font-medium text-sm ${
                         activeTab === 'clients' 
-                        ? "border-b-2 border-blue-500 text-blue-600 font-medium" 
+                        ? "border-b-2 border-blue-500 text-blue-600" 
                         : "text-gray-500 hover:text-gray-700"
                     }`}
                 >
-                    Заказы клиентов
+                    🛒 Заказы клиентов (Продажа)
                 </button>
 
-                {/* 3. Условие для отображения админской части */}
                 {userRole === 'admin' && (
                     <button
                         onClick={() => setActiveTab('suppliers')}
-                        className={`px-4 py-2 transition-all ${
+                        className={`pb-2 px-1 transition-all font-medium text-sm ${
                             activeTab === 'suppliers' 
-                            ? "border-b-2 border-blue-500 text-blue-600 font-medium" 
+                            ? "border-b-2 border-blue-500 text-blue-600" 
                             : "text-gray-500 hover:text-gray-700"
                         }`}
                     >
-                        Закупки у поставщиков
+                        📦 Закупки у поставщиков (Пополнение)
                     </button>
                 )}
             </div>
 
-            {/* 4. Отрисовка контента в зависимости от вкладки */}
-            <div className="mt-4">
-                {activeTab === 'clients' && <Orders />}
+            {/* Отрисовка контента */}
+            <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
+                {activeTab === 'clients' && (
+                    <Orders 
+                        products={products} 
+                        onOrderSuccess={loadStock} 
+                    />
+                )}
                 
-                {/* Дополнительная проверка безопасности при рендере */}
-                {activeTab === 'suppliers' && userRole === 'admin' && <SupplyOrder />}
+                {activeTab === 'suppliers' && userRole === 'admin' && (
+                    <SupplyOrder 
+                        products={products} 
+                        onOrderSuccess={loadStock} 
+                    />
+                )}
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { IProduct } from '../../API/stock.service';
 
 // Интерфейс позиции в закупке
 interface ISupplyItem {
@@ -51,8 +52,15 @@ const statusStyles = {
     'В пути': 'bg-yellow-100 text-yellow-700',
     'Принят на склад': 'bg-green-100 text-green-700'
 };
+interface SupplyOrderProps {
+    products: IProduct[];
+    onOrderSuccess: () => Promise<void>;
+}
 
-const SupplyOrder = () => {
+
+const SupplyOrder = ({ products, onOrderSuccess }: SupplyOrderProps) => {
+    
+    console.log(products)
     const [orders, setOrders] = useState<ISupplyOrder[]>(testSupplies);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewMode, setViewMode] = useState<'summary' | 'detailed'>('detailed');
