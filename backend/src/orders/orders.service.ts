@@ -20,7 +20,7 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) { }
 
   async createOrder(dto: CreateOrderDto): Promise<Order> {
-
+    
     return this.prisma.$transaction(async (tx) => {
       for (const item of dto.items) {
         const product = await tx.product.findUnique({

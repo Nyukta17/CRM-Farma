@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { IProduct } from '../../API/stock.service';
+import { SupplyOrderService } from '../../API/supply-order.service';
 
 // Интерфейс позиции в закупке
 interface ISupplyItem {
@@ -74,33 +75,47 @@ const SupplyOrder = ({ products, onOrderSuccess }: SupplyOrderProps) => {
     });
 
     // Функция сбора данных для отправки на бэк
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-        // Формируем объект, который "улетит" на сервер
-        const orderToBack = {
-            id: `SUP-${Date.now()}`, // Временный ID
+    // 1. Находим productId по имени (если в форме только имя)
+    // Лучше, если в formData.medicineId сразу хранится ID из <select>
+    const selectedProduct = products.find(p => p.name === formData.medicineName);
+
+    if (!selectedProduct) {
+        alert("Товар не найден в базе");
+        return;
+    }
+
+    try {
+        // 2. Формируем объект строго по нашему DTO на бэкенде
+        const dto = {
             supplier: formData.supplier,
+            totalAmount: Number(formData.quantity) * Number(formData.price),
             items: [
                 {
-                    medicineName: formData.medicineName,
+                    productId: selectedProduct.id,
                     quantity: Number(formData.quantity),
-                    purchasePrice: Number(formData.price)
+                    priceAtOrder: Number(formData.price)
                 }
-            ],
-            status: 'Черновик',
-            totalAmount: formData.quantity * formData.price,
-            createdAt: new Date().toLocaleDateString()
+            ]
         };
 
-        console.log("Отправка на бэк-энд:", orderToBack);
+        // 3. Отправляем на сервер
+        await SupplyOrderService.create(dto);
 
-        // Обновляем локальный стейт (имитация ответа от бэка)
-        // setOrders([...orders, orderToBack as any]); 
+        // 4. Успех
+        alert("Поставка принята! Склад обновлен.");
+        setIsModalOpen(false);
+        
+        // 5. Важно: вызываем обновление склада в родителе
+        await onOrderSuccess(); 
 
-        setIsModalOpen(false); // Закрываем модалку
-        alert("Заказ успешно сформирован и отправлен в лог консоли!");
-    };
+    } catch (error) {
+        console.error("Ошибка при отправке закупки:", error);
+        alert("Не удалось сохранить поставку");
+    }
+};
     // В будущем тут будет fetch('/api/supply-orders')
     const handleCreateOrder = () => {
         alert("Открытие модального окна создания закупки...");

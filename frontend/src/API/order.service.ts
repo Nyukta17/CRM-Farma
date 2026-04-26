@@ -1,3 +1,5 @@
+import { api } from "./api";
+
 interface ICartItem {
     productId: number;
     name?: string;
@@ -9,10 +11,10 @@ export interface ICreateOrderDtoP{
     totalPrice:number;
     items:ICartItem[];
 }
-// export const OrderService = {
-//     async creatOrder(dto:Omit<ICreateOrderDtoP,"id">):Promise<ICreateOrderDtoP>{
-//         const {data} = await api.post<ICreateOrderDtoP>
-//         console.log(dto)
-
-//     }
-// }
+export const OrderService = {
+    async creatOrder(dto:Omit<ICreateOrderDtoP,"id">):Promise<ICreateOrderDtoP>{
+        const {data} = await api.post<ICreateOrderDtoP>('/orders',dto)
+        console.log(dto)
+        return data
+    }
+}
